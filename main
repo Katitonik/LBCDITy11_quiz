@@ -1,0 +1,101 @@
+# This command tells the program that another file should be linked and used.
+import json
+
+
+# This is a simple input code asking the user's name and displaying it in a message
+def get_contestant_name():
+    # This stores the name in a file called get_contestant_name
+    name = input("Hello! What is your name? ")
+    print(
+        "Welcome, {} to this MARVEL quiz! This quiz has 19 questions to determine if your MARVEL knowledge is "
+        "MARVELous.".format(name))
+    # The .format command is used to 'fetch' the data stored in a variable (get_contestant_name) and then replace the
+    # {} with the variable.
+
+
+# The header will be displayed at the top of the quiz, giving the purpose of the quiz.
+# The command :return: is used to document an imprinted command (This can be seen by using 'Ctrl Q, but this can only be
+# used in PyCharm.
+def header():
+    """
+    Prints a header to describe the propose of the quiz
+    :return: None
+    """
+    print("MARVEL quiz")
+
+
+# The list command is being used here. It's purpose is to retrieve / read the questions from
+# questions_and_answers and display them
+# Along with :return: , :param: is used to document imprented coding
+def ask(card):
+    """
+    Ask a question, evaluate the answer and award one point if the answer is correct.
+
+    :param card: quiz card with question, options and correct answer
+    :return: 1 if the answer to the question is correct, else 0
+    """
+    # unpack the card
+    question, options, correct_answer = card
+
+    # ask the question
+    print(question)
+
+    # display the options
+    for index, option in enumerate(options, start=1):
+        print(f" {index}. {option}")
+
+    # get the answer
+    answer = input("1, 2, 3 or 4: ")
+
+    # check the answer using if statement
+    if answer == correct_answer:
+        return 1
+    else:
+        return 0
+
+
+# The command int (integer) tells the program that the code it's running contains numbers.
+def quiz():
+    """
+    Loads the quiz cards from the quiz card file,  test the contestant and return the score of the contestant.
+
+    :return: the quiz score
+    """
+
+    # load cards from quiz file
+    with open('questions_and_answers.json', 'r') as cards_file:
+        cards = json.load(cards_file)
+
+    # ask the question
+    current_score = 0
+    for card in cards:
+        current_score += ask(card)
+    return current_score
+
+
+# The footer is displayed at the end of the quiz to display the score
+def footer(total):
+    """
+    Display the score of achieved for taking the quiz
+
+    :param total: score to display
+    :return: None
+    """
+
+    print(f"Your score is: {total}")
+
+
+# This command tells the device in which order the quiz should be run, the command 'try' cannot be used without the use
+# of 'except' and visa versa
+if __name__ == '__main__':
+    try:
+        get_contestant_name()
+        header()
+        score = quiz()
+        footer(score)
+    except json.JSONDecodeError:
+        print("Oops, looks like your quiz cards file is not well formed!")
+        exit(2)
+    except (EOFError, KeyboardInterrupt):
+        print("User terminated process. Exiting...")
+        exit(3)
